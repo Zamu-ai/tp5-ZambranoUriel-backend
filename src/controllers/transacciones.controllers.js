@@ -68,7 +68,7 @@ funcionesTransacciones.transaccionDeCliente= async (req,res) =>{
 
 funcionesTransacciones.transaccionIdioma= async (req,res)=>{
     try{
-        const {idiomaOrigen,idiomaDestino}=req.params
+        const {idiomaOrigen,idiomaDestino}=req.body
         
         if(!idiomaOrigen || !idiomaDestino)
         {res.json({

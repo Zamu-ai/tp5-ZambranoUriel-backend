@@ -10,3 +10,13 @@ const Publicacion=ConexionABd.define('Publicacion',{
     vigente:{type:DataTypes.BOOLEAN,allowNull:false}
 },{tablename:'publicaciones'} )
 module.exports=Publicacion;
+
+Publicacion.belongsTo('Empleado',{
+    foreignKey:{
+        name:'empleadoId',
+        allowNull:false
+    },
+    as: empleado
+}
+
+)

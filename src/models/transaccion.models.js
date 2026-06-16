@@ -1,13 +1,13 @@
 const {DataTypes}=require('sequelize')
 const conexionABd=require('./../../config/database')
 const Transaccion= conexionABd.define('Transaccion',{
-    idiomaOrigen:{type:DataType.STRING,allowNull:false},
-    textoOrigen:{type:DataType.TEXT,allowNull:false},
-    idiomaDestino:{type:DataType.STRING,allowNull:false},
-    textoDestino:{type:DataType.TEXT,allowNull:false},
-    emailCliente:{type:DataType.STRING,allowNull:false},
+    idiomaOrigen:{type:DataTypes.STRING,allowNull:false},
+    textoOrigen:{type:DataTypes.TEXT,allowNull:false},
+    idiomaDestino:{type:DataTypes.STRING,allowNull:false},
+    textoDestino:{type:DataTypes.TEXT,allowNull:false},
+    emailCliente:{type:DataTypes.STRING,allowNull:false},
 },{
-    tableName: 'socios',
+    tableName: 'transaciones',
     timestamps:true
 })
 module.exports=Transaccion

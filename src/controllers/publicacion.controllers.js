@@ -5,12 +5,12 @@ const {Op} = require('sequelize')
 
 publicacionFunciones.createPubli=async(req,res)=>{
     try{const body=req.body
-        const publi= await PublicacionModal.create(body);
-        if(body.empleado=='')
-        {res.json({
-            status:'0',
-            msg:'no se envió ningun empleado'
-        })}
+        if(!body.empleadoId)
+            {return res.status(404).json({
+                status:'0',
+                msg:'no se envió ningun empleado'
+            })}
+            const publi= await PublicacionModal.create(body);
         res.json(publi);
     }
     catch(error){
@@ -26,8 +26,8 @@ publicacionFunciones.getPublis=async(req,res)=>{
     try{
         const publicaciones= await PublicacionModal.findAll({
             include:[{
-                Modal:Empleado,
-                as:empleado
+                model:Empleado,
+                as:'empleado'
                     }]
         });
         res.json(publicaciones)
@@ -41,21 +41,25 @@ publicacionFunciones.getPublis=async(req,res)=>{
     }
 }
 
-publicacionFunciones.delete=async (req,res)=>{
-    try{const {empleado, titulo}=req.body
+publicacionFunciones.deletePubli=async (req,res)=>{
+    try{const {empleadoId, titulo}=req.params
         const publiExistente= await PublicacionModal.findOne({
-            [Op.and]:[{empleado:empleado},
-                      {titulo:titulo}
-            ]
+            where:{empleadoId: empleadoId,
+                      titulo: titulo
+        }
         })
         if(!publiExistente){
-            res.json({
+           return res.status(404).json({
                 status:'0',
                 msg:'no se encontró publicacion del empleado'
             })
         }
         await publiExistente.destroy();
 
+        res.json({
+            status:'1',
+            msg:'Publicacion eliminada'
+        })
     }
     catch(error){
         res.status(505).json({
@@ -67,14 +71,14 @@ publicacionFunciones.delete=async (req,res)=>{
 }
 
 publicacionFunciones.updatePubli=async (req,res)=>{
-    try{const {empleado, titulo}=req.body
+    try{const {empleado, titulo}=req.params
         const publiExistente= await PublicacionModal.findOne({
-            [Op.and]:[{empleado:empleado},
-                      {titulo:titulo}
-            ]
+            where:{empleado:empleado,
+                      titulo:titulo
+                   }
         })
         if(!publiExistente){
-            res.json({
+            return res.status(404).json({
                 status:'0',
                 msg:'no se encontró publicacion del empleado'
             })
@@ -95,15 +99,17 @@ publicacionFunciones.updatePubli=async (req,res)=>{
 
 publicacionFunciones.getPublisVigentes=async(req,res)=>{
     try{
-        const{titulo,vigente}=req.body
+        const{titulo,vigente}=req.params
         const publis= await PublicacionModal.findAll({
-            [Op.and]:[ 
-                {titulo: {[Op.like]: `%${titulo}%`}},
-                        {vigente:vigente}
-            ]
+            where:{
+                [Op.and]:[ 
+                    {titulo: {[Op.like]: `%${titulo}%`}},
+                            {vigente:vigente === 'true' || vigente ===true}
+                         ]
+            }
         })
         if(!publis)
-        {res.json({
+        {return res.status(404).json({
             status:'0',
             msg:'no existen publicaciones que cumplan con esas caracteristicas'
         })}

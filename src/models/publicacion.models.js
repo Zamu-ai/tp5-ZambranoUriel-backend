@@ -1,4 +1,4 @@
-const {DataTypes, TableHints}= require('sequelize')
+const {DataTypes}= require('sequelize')
 const ConexionABd= require('../../config/database')
 const Empleado=require('../models/empleado.models')
 const Publicacion=ConexionABd.define('Publicacion',{
@@ -6,17 +6,14 @@ const Publicacion=ConexionABd.define('Publicacion',{
     contenido:{type:DataTypes.STRING,allowNull:false},
     imagenAsociada:{type:DataTypes.STRING,allowNull:false},
     fechaPublicacion:{type:DataTypes.STRING,allowNull:false},
-    empleado:{type:DataTypes.Empleado,allowNull:false},
-    vigente:{type:DataTypes.BOOLEAN,allowNull:false}
-},{tablename:'publicaciones'} )
-module.exports=Publicacion;
+     vigente:{type:DataTypes.BOOLEAN,allowNull:false}
+},{tableName:'publicaciones'} )
 
-Publicacion.belongsTo('Empleado',{
+Publicacion.belongsTo(Empleado,{
     foreignKey:{
         name:'empleadoId',
         allowNull:false
     },
-    as: empleado
-}
-
-)
+    as: 'empleado'
+})
+module.exports=Publicacion;
